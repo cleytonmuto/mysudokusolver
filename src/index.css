@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&family=Roboto+Slab:wght@400;700&display=swap');
+@import 'tailwindcss';
+
+/* Sudoku layout theme (from sudoku project palette) */
+@theme {
+    --color-error: rgb(209 43 82);
+    --color-strong: rgb(158 118 143);
+    --color-primary: rgb(199 240 189);
+    --color-primary-bg: rgb(73 125 126);
+    --color-secondary: rgb(62 147 216);
+    --color-highlight: rgb(179 205 209 / 0.3);
+    --color-grey: rgb(159 164 196);
+}
+
+@layer base {
+    body {
+        @apply m-0 p-0 min-h-screen antialiased;
+        font-family: 'Roboto Slab', serif;
+    }
+}

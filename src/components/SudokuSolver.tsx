@@ -32,7 +32,7 @@ export function SudokuSolver() {
                 return next;
             });
         },
-        [given]
+        [given],
     );
 
     const clearCell = useCallback(
@@ -40,7 +40,7 @@ export function SudokuSolver() {
             if (given[row][col]) return;
             setCell(row, col, null);
         },
-        [given, setCell]
+        [given, setCell],
     );
 
     const handleSolve = useCallback(() => {
@@ -64,8 +64,8 @@ export function SudokuSolver() {
         setGrid(
             (prev) =>
                 prev.map((row, r) =>
-                    row.map((val, c) => (given[r][c] ? val : null))
-                ) as Grid
+                    row.map((val, c) => (given[r][c] ? val : null)),
+                ) as Grid,
         );
         setSolved(false);
     }, [given]);
@@ -99,7 +99,7 @@ export function SudokuSolver() {
                 setCell(
                     selectedCell.row,
                     selectedCell.col,
-                    Number(e.key) as CellValue
+                    Number(e.key) as CellValue,
                 );
                 return;
             }
@@ -117,20 +117,20 @@ export function SudokuSolver() {
     }, []);
 
     return (
-        <div className="flex flex-col m-4">
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-                <div className="flex items-center gap-2">
-                    <span className="text-[var(--color-grey)]">
+        <div className="flex flex-col w-full m-2 sm:m-4">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-3 sm:gap-4 mb-3 sm:mb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 min-w-0">
+                    <span className="text-[var(--color-grey)] text-sm sm:text-base">
                         Sudoku Solver
                     </span>
                     {selectedCell && (
-                        <span className="text-sm text-[var(--color-secondary)]">
+                        <span className="text-xs sm:text-sm text-[var(--color-secondary)]">
                             (Tip: type 1–9 to fill, Backspace to clear, arrows
                             to move)
                         </span>
                     )}
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 justify-center sm:justify-end">
                     <Button onClick={handleSolve}>Solve</Button>
                     {solved ? (
                         <Button
@@ -146,16 +146,18 @@ export function SudokuSolver() {
                 </div>
             </div>
 
-            <div className="flex flex-wrap justify-center items-start gap-6">
+            <div className="flex flex-col md:flex-row justify-center items-center md:items-start gap-4 md:gap-6 w-full">
                 <SudokuGrid
                     grid={grid}
                     given={given}
                     selectedCell={selectedCell}
                     onCellSelect={handleCellSelect}
                 />
-                <div className="max-w-[300px] mt-4">
-                    <h2 className="text-lg font-semibold mb-2">How to use</h2>
-                    <p className="text-sm text-justify text-[var(--color-grey)]">
+                <div className="w-full max-w-[300px] md:max-w-[300px] mt-0 md:mt-4 px-1">
+                    <h2 className="text-base sm:text-lg font-semibold mb-2">
+                        How to use
+                    </h2>
+                    <p className="text-xs sm:text-sm text-justify text-[var(--color-grey)]">
                         Click a cell to select it, then type{' '}
                         <strong>1–9</strong> to enter a clue or{' '}
                         <strong>Backspace</strong> to clear it. Use the arrow

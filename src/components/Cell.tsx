@@ -13,7 +13,7 @@ export function Cell({ value, state, selected, onClick }: CellProps) {
     const isSolved = state === 'solved';
 
     const base =
-        'w-full h-full flex items-center justify-center text-xl cursor-pointer border border-[var(--color-grey)] text-[var(--color-grey)] select-none';
+        'w-full h-full min-w-0 min-h-0 flex items-center justify-center text-base sm:text-lg md:text-xl cursor-pointer border border-[var(--color-grey)] text-[var(--color-grey)] select-none touch-manipulation';
     const given = isGiven ? 'font-bold text-[var(--color-secondary)]' : '';
     const solved =
         isSolved && !isGiven ? 'font-bold text-[var(--color-secondary)]' : '';

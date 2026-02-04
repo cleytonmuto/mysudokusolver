@@ -12,7 +12,7 @@ export function Button({
     ...props
 }: ButtonProps) {
     const base =
-        'px-4 py-2 rounded-lg font-medium border border-transparent cursor-pointer transition-colors';
+        'min-h-[44px] px-4 py-2.5 sm:py-2 rounded-lg font-medium border border-transparent cursor-pointer transition-colors touch-manipulation';
     const variants = {
         primary: 'bg-[var(--color-primary-bg)] text-white hover:opacity-90',
         secondary: 'bg-[var(--color-grey)] text-white hover:opacity-90',

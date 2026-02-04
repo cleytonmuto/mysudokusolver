@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { SudokuGrid } from './SudokuGrid';
 import { Button } from './Button';
 import type { Grid, CellValue } from '../types';
@@ -22,6 +22,7 @@ export function SudokuSolver() {
         col: number;
     } | null>(null);
     const [solved, setSolved] = useState(false);
+    const hiddenInputRef = useRef<HTMLInputElement>(null);
 
     const setCell = useCallback(
         (row: number, col: number, value: CellValue) => {
@@ -80,8 +81,20 @@ export function SudokuSolver() {
     }, []);
 
     useEffect(() => {
+        const isEditable =
+            selectedCell && !given[selectedCell.row][selectedCell.col];
+        if (isEditable) {
+            const t = setTimeout(() => hiddenInputRef.current?.focus(), 0);
+            return () => clearTimeout(t);
+        } else {
+            hiddenInputRef.current?.blur();
+        }
+    }, [selectedCell, given]);
+
+    useEffect(() => {
         const onKeyDown = (e: KeyboardEvent) => {
             if (!selectedCell) return;
+            if ((e.target as Node)?.nodeName === 'INPUT') return;
             if (DIRECTION_KEYS.includes(e.key)) {
                 e.preventDefault();
                 const map: Record<string, [number, number]> = {
@@ -116,8 +129,51 @@ export function SudokuSolver() {
         setSelectedCell({ row, col });
     }, []);
 
+    const handleHiddenInputChange = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            if (!selectedCell) return;
+            const raw = e.target.value;
+            const last = raw.slice(-1);
+            if (last >= '1' && last <= '9') {
+                setCell(selectedCell.row, selectedCell.col, Number(last) as CellValue);
+            } else if (raw === '') {
+                clearCell(selectedCell.row, selectedCell.col);
+            }
+        },
+        [selectedCell, setCell, clearCell],
+    );
+
+    const handleHiddenInputKeyDown = useCallback(
+        (e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (!selectedCell) return;
+            if (e.key === 'Backspace' || e.key === 'Delete') {
+                clearCell(selectedCell.row, selectedCell.col);
+                e.preventDefault();
+            }
+        },
+        [selectedCell, clearCell],
+    );
+
     return (
         <div className="flex flex-col w-full m-2 sm:m-4">
+            <input
+                ref={hiddenInputRef}
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                autoComplete="off"
+                aria-hidden
+                tabIndex={-1}
+                readOnly={selectedCell ? given[selectedCell.row][selectedCell.col] : true}
+                className="sr-only"
+                value={
+                    selectedCell
+                        ? String(grid[selectedCell.row][selectedCell.col] ?? '')
+                        : ''
+                }
+                onChange={handleHiddenInputChange}
+                onKeyDown={handleHiddenInputKeyDown}
+            />
             <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-3 sm:gap-4 mb-3 sm:mb-4">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 min-w-0">
                     <span className="text-[var(--color-grey)] text-sm sm:text-base">
